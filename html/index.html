@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>搜索示例</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <label for="query">请输入查询内容：</label>
+  <input type="text" id="query">
+  <button onclick="search()">搜索</button>
+  <br>
+  <label for="result">搜索结果：</label>
+  <textarea id="result" cols="30" rows="10" readonly></textarea>
+  <script>
+    function search() {
+      var query = document.getElementById("query").value;
+      var url = "http://lingfoxai.com/chat?key=3BlbmFpLm9wZW5haS5hdXR&q=" + encodeURIComponent(query);
+      axios.get(url)
+        .then(function(response) {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(response.data, "text/html");
+          //var result = doc.getElementById("content_left").textContent;
+          document.getElementById("result").value = response.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
+  </script>
+</body>
+</html>
