@@ -15,7 +15,7 @@
   <script>
     function search() {
       var query = document.getElementById("query").value;
-      var url = "http://lingfoxai.com/chat?key=3BlbmFpLm9wZW5haS5hdXR&q=" + encodeURIComponent(query);
+      var url = "http://lingfoxai.com/chat.html";
       axios.get(url)
         .then(function(response) {
           var parser = new DOMParser();

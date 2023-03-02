@@ -362,18 +362,19 @@ REQUEST_TYPE CLIENT::doGet()
 	{
 		return BAD_REQUEST;
 	}
+	else
+	{
+		strncpy(_requestFileName + len, _url, REQUEST_FILENAME_MAXLEN - len - 1);
+		LOG_DEBUG("用户%s请求URL = %s", inet_ntoa(_sin.sin_addr), _requestFileName);
+		if (stat(_requestFileName, &_fileStat) < 0)return NO_RESOURCE;
+		if (!(_fileStat.st_mode & S_IROTH))return FORBIDDEN_REQUEST;
+		if (S_ISDIR(_fileStat.st_mode))return BAD_REQUEST;
+		int file = open(_requestFileName, O_RDONLY);
+		_fileAddress = reinterpret_cast<char*>(mmap(0, _fileStat.st_size, PROT_READ, MAP_PRIVATE, file, 0));
+		close(file);
+		return FILE_REQUEST;
+	}
 
-	strncpy(_requestFileName + len, _url, REQUEST_FILENAME_MAXLEN - len - 1);
-
-	//LOG_DEBUG("用户%s请求URL = %s",inet_ntoa(_sin.sin_addr), _requestFileName);
-	if (stat(_requestFileName, &_fileStat) < 0)return NO_RESOURCE;
-	if (!(_fileStat.st_mode & S_IROTH))return FORBIDDEN_REQUEST;
-	if (S_ISDIR(_fileStat.st_mode))return BAD_REQUEST;
-
-	int file = open(_requestFileName, O_RDONLY);
-	_fileAddress = reinterpret_cast<char*>(mmap(0, _fileStat.st_size, PROT_READ, MAP_PRIVATE, file, 0));
-	close(file);
-	return FILE_REQUEST;
 }
 
 

@@ -59,8 +59,8 @@ int main(int argc, char* argv[])
 	HttpServer server(EPOLLET | EPOLLRDHUP, EPOLLET | EPOLLRDHUP | EPOLLONESHOT, 500);
 	if (SERVER_ERROR == server.initSocket(80, ""))
 		return -1;
-	std::thread tcmd(cmdThread, &server);
-	tcmd.detach();
+	//std::thread tcmd(cmdThread, &server);
+	//tcmd.detach();
 	server.onRun();
 	std::cout << "程序结束" << std::endl;
 	return 0;
